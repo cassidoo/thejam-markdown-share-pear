@@ -18,12 +18,10 @@
 			}
 		</style>
 		<script>
-			const share = async () => {
+			const share = async (shareSlug) => {
 				let markdown = encodeURIComponent(
 					document.getElementById("inputText").value
 				);
-
-				let shareSlug = document.getElementById("shareSlug").value;
 
 				if (!shareSlug) throw new Error(`No share slug provided.`);
 
@@ -42,16 +40,20 @@
 			};
 
 			function shareAndPrint() {
-				share()
+				let shareSlug = document.getElementById("shareSlug").value;
+
+				let string = `<a href="https://jam-share-pear.netlify.app/blog/${shareSlug}">jam-share-pear.netlify.app/blog/${shareSlug}</a>`;
+
+				share(shareSlug)
 					.then((data) => {
 						console.log(data);
+						document.getElementById("output").innerHTML = string;
 					})
 					.catch((err) => {
-						document.getElementById("output").innerHTML = err;
+						console.error(err);
+						document.getElementById("output").innerHTML = string;
 					});
 			}
-
-			// https://jam-share-pear.netlify.app/
 		</script>
 	</head>
 	<body>
@@ -59,7 +61,6 @@
 
 		<p>Write some markdown here, and then share it with Share Pear!</p>
 
-		<!-- A text input for the slug -->
 		<input id="shareSlug" placeholder="Enter a slug" /><br />
 		<textarea id="inputText"></textarea><br />
 		<button onclick="shareAndPrint()">Call Share Pear</button>
